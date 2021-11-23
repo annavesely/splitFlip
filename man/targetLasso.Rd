@@ -11,7 +11,7 @@ targetLasso(X, Y, target = NULL)
 
 \item{Y}{numeric response vector.}
 
-\item{target}{number of variables to be selected at most. If null, it is set to \code{nrow(X)}.}
+\item{target}{maximum number of variables to be selected. If null, it is set to \code{nrow(X)}.}
 }
 \value{
 \code{targetLasso} returns a numeric vector containing the indices of the selected variables.
@@ -25,16 +25,14 @@ The \code{lambda} parameter is chosen as the smallest parameter that selects at 
 Notice that the number of selected variables will never exceed the number of observations.
 }
 \examples{
-set.seed(42)
-n <- 5 # observations
-m <- 10 # variables
-active <- c(1,2)
-beta <- rep(0,m)
-beta[active] <- 5
-X <- matrix(rnorm(m*n), ncol=m)
-Y <- rnorm(n=n, mean=X \%*\% beta)
-target <- 4
-targetLasso(X, Y, target)
+# generate linear regression data with 20 variables and 10 observations
+res <- simData(prop=0.1, m=20, n=10, seed=42)
+
+# choose target as twice the number of active variables
+target <- 2*length(res$active)
+
+# selection of at most target variables using the Lasso
+targetLasso(res$X, res$Y, target)
 }
 \author{
 Anna Vesely.

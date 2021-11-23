@@ -1,5 +1,5 @@
 #' @title Standardized Score
-#' @description Internal function. It computes the standardized scores for a variable and a flip.
+#' @description Internal function. It computes the standardized score for a variable and a flip.
 #' @usage stdScore(v, Y, A)
 #' @param v numeric vector of observations for a covariate.
 #' @param Y numeric response vector.

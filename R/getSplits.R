@@ -1,13 +1,13 @@
 #' @title Data Splits and Variable Selectiong
 #' @description Internal function. It splits the data into two subsets of equal size,
 #' then uses the first subset to select variables.
-#' @usage getSplits(X, Y, Q, target, varSel = targetLasso, varSelArgs = NULL)
+#' @usage getSplits(X, Y, Q, target, varSel, varSelArgs)
 #' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
-#' @param target number of variables to be selected at most.
-#' @param varSel a function to perform model selection. It must have at lest three arguments:
-#' \code{X} (design matrix), \code{Y} (response vector) and \code{target} (maximum number of selected variabls).
+#' @param target maximum number of variables to be selected.
+#' @param varSel a function to perform variable selection. It must have at least three arguments:
+#' \code{X} (design matrix), \code{Y} (response vector) and \code{target} (maximum number of selected variables).
 #' Additional arguments are passed through \code{varSelArgs}.
 #' Return value is a numeric vector containing the indices of the selected variables.
 #' @param varSelArgs named list of further arguments for \code{varSel}.
@@ -21,7 +21,7 @@
 
 
 
-getSplits <- function(X, Y, Q, target, varSel=targetLasso, varSelArgs=NULL){
+getSplits <- function(X, Y, Q, target, varSel, varSelArgs){
 
   m <- ncol(X)
   n <- nrow(X)

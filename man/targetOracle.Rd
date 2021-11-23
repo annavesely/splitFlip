@@ -11,7 +11,7 @@ targetOracle(X, Y, target = NULL, m, active)
 
 \item{Y}{numeric response vector.}
 
-\item{target}{number of variables to be selected at most. If null, it is set to \code{nrow(X)}.}
+\item{target}{maximum number of variables to be selected. If null, it is set to \code{nrow(X)}.}
 
 \item{m}{total number of variables.}
 
@@ -28,16 +28,14 @@ This function selects a given number of variables, always including those in a p
 An error message is returned if \code{target} is smaller than the length of \code{active}.
 }
 \examples{
-set.seed(42)
-n <- 5 # observations
-m <- 10 # variables
-active <- c(1,2)
-beta <- rep(0,m)
-beta[active] <- 5
-X <- matrix(rnorm(m*n), ncol=m)
-Y <- rnorm(n=n, mean=X \%*\% beta)
-target <- 4
-targetOracle(X, Y, target, m, active)
+# generate linear regression data with 20 variables and 10 observations
+res <- simData(prop=0.1, m=20, n=10, seed=42)
+
+# choose target as twice the number of active variables
+target <- 2*length(res$active)
+
+# selection of at most target variables, including the active ones
+targetOracle(res$X, res$Y, target, ncol(res$X), res$active)
 }
 \author{
 Anna Vesely.

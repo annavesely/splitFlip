@@ -3,23 +3,21 @@
 #' @usage targetLasso(X, Y, target = NULL)
 #' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
-#' @param target number of variables to be selected at most. If null, it is set to \code{nrow(X)}.
+#' @param target maximum number of variables to be selected. If null, it is set to \code{nrow(X)}.
 #' @details The \code{lambda} parameter is chosen as the smallest parameter that selects at most \code{target} variables.
 #' @details Notice that the number of selected variables will never exceed the number of observations.
 #' @return \code{targetLasso} returns a numeric vector containing the indices of the selected variables.
 #' @author Anna Vesely.
 #' @importFrom glmnet glmnet
 #' @examples
-#' set.seed(42)
-#' n <- 5 # observations
-#' m <- 10 # variables
-#' active <- c(1,2)
-#' beta <- rep(0,m)
-#' beta[active] <- 5
-#' X <- matrix(rnorm(m*n), ncol=m)
-#' Y <- rnorm(n=n, mean=X %*% beta)
-#' target <- 4
-#' targetLasso(X, Y, target)
+#' # generate linear regression data with 20 variables and 10 observations
+#' res <- simData(prop=0.1, m=20, n=10, seed=42)
+#'
+#' # choose target as twice the number of active variables
+#' target <- 2*length(res$active)
+#'
+#' # selection of at most target variables using the Lasso
+#' targetLasso(res$X, res$Y, target)
 #' @export
 
 
@@ -30,10 +28,8 @@ targetLasso <- function(X, Y, target=NULL){
   if(!(nrow(X)==length(Y))){stop("Dimensions of X and Y are incompatible")}
 
   if(is.null(target)){target <- nrow(X)}
-
-  if(!is.numeric(target) || !is.finite(target)){stop("target must be a positive number")}
+  if(!is.numeric(target) || !is.finite(target) || floor(target) <= 0){stop("target must be a positive integer")}
   target <- floor(target)
-  if(target <= 0){stop("target must be a positive integer")}
 
   fit <- glmnet::glmnet(X, Y, family="gaussian", dfmax=target-1)
   L <- length(fit$lambda)
