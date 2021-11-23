@@ -10,7 +10,10 @@
 #' @param concordant logical, \code{TRUE} for positive coefficients,
 #' \code{FALSE} for coefficients with alternating signs.
 #' @param seed seed.
-#' @details Bla
+#' @details The covariate matrix \code{X} contains \code{n} independent observations from a
+#' MVN with mean 0 and equi-correlation \code{rho}.
+#' @details The intercept and a proportion \code{prop} of the entries in the coefficient vector
+#' are non-null, with signal such that the one-sample t test with significance level \code{alpha} has power equal to \code{pw}.
 #' @return \code{simData} returns a list containing the covariate matrix \code{X} (excluding the intercept),
 #' the response vector \code{Y}, and the index vector of active variables \code{active.}
 #' @author Anna Vesely.

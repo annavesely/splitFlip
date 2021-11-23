@@ -32,7 +32,11 @@ the response vector \code{Y}, and the index vector of active variables \code{act
 This function simulates a design matrix and a response vector.
 }
 \details{
-Bla
+The covariate matrix \code{X} contains \code{n} independent observations from a
+MVN with mean 0 and equi-correlation \code{rho}.
+
+The intercept and a proportion \code{prop} of the entries in the coefficient vector
+are non-null, with signal such that the one-sample t test with significance level \code{alpha} has power equal to \code{pw}.
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations
