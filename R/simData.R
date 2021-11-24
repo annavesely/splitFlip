@@ -1,6 +1,6 @@
 #' @title Simulating Linear Regression Data
 #' @description This function simulates a design matrix and a response vector.
-#' @usage simData(prop, m, n, rho = 0, alpha = 0.05, pw = 0.8, concordant = TRUE, seed = NULL)
+#' @usage simData(prop, m, n, rho = 0, alpha = 0.05, pw = 0.9, concordant = TRUE, seed = NULL)
 #' @param prop proportion of active variables.
 #' @param m number of variables.
 #' @param n numer of observations.
@@ -13,7 +13,8 @@
 #' @details The covariate matrix \code{X} contains \code{n} independent observations from a
 #' MVN with mean 0 and equi-correlation \code{rho}.
 #' @details The intercept and a proportion \code{prop} of the entries in the coefficient vector
-#' are non-null, with signal such that the one-sample t test with significance level \code{alpha} has power equal to \code{pw}.
+#' are non-null, with signal such that the one-sample t test with significance level \code{alpha},
+#' using half the sample size, has power equal to \code{pw}.
 #' @return \code{simData} returns a list containing the covariate matrix \code{X} (excluding the intercept),
 #' the response vector \code{Y}, and the index vector of active variables \code{active.}
 #' @author Anna Vesely.
@@ -38,7 +39,7 @@
 
 
 
-simData <- function(prop, m, n, rho=0, alpha=0.05, pw=0.8, concordant=TRUE, seed=NULL){
+simData <- function(prop, m, n, rho=0, alpha=0.05, pw=0.9, concordant=TRUE, seed=NULL){
 
   if(!is.numeric(prop) || !is.finite(prop)){stop("prop must be a number in [0,1]")}
   if(prop < 0 || prop > 1){stop("prop must be a number in [0,1]")}
@@ -59,7 +60,8 @@ simData <- function(prop, m, n, rho=0, alpha=0.05, pw=0.8, concordant=TRUE, seed
   set.seed(round(seed))
 
   m1 <- ceiling(m * prop)
-  signal <- power.t.test(power=pw, n=n, sig.level=alpha, type="one.sample", alternative="two.sided", sd=1)$delta
+  n0 <- floor(n/2)
+  signal <- power.t.test(power=pw, n=n0, sig.level=alpha, type="one.sample", alternative="two.sided", sd=1)$delta
 
   beta <- rep(0,m)
   if(concordant){

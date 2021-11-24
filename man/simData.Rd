@@ -4,7 +4,7 @@
 \alias{simData}
 \title{Simulating Linear Regression Data}
 \usage{
-simData(prop, m, n, rho = 0, alpha = 0.05, pw = 0.8, concordant = TRUE, seed = NULL)
+simData(prop, m, n, rho = 0, alpha = 0.05, pw = 0.9, concordant = TRUE, seed = NULL)
 }
 \arguments{
 \item{prop}{proportion of active variables.}
@@ -36,7 +36,8 @@ The covariate matrix \code{X} contains \code{n} independent observations from a
 MVN with mean 0 and equi-correlation \code{rho}.
 
 The intercept and a proportion \code{prop} of the entries in the coefficient vector
-are non-null, with signal such that the one-sample t test with significance level \code{alpha} has power equal to \code{pw}.
+are non-null, with signal such that the one-sample t test with significance level \code{alpha},
+using half the sample size, has power equal to \code{pw}.
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations

@@ -4,7 +4,7 @@
 \alias{targetOracle}
 \title{Variable Selection with Oracle}
 \usage{
-targetOracle(X, Y, target = NULL, m, active)
+targetOracle(X, Y, target = NULL, m, active, seed = NULL)
 }
 \arguments{
 \item{X}{numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.}

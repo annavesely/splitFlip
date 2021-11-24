@@ -1,7 +1,7 @@
 #' @title Data Splits and Variable Selectiong
 #' @description Internal function. It splits the data into two subsets of equal size,
 #' then uses the first subset to select variables.
-#' @usage getSplits(X, Y, Q, target, varSel, varSelArgs)
+#' @usage getSplits(X, Y, Q, target, varSel, varSelArgs, seed)
 #' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
@@ -11,6 +11,7 @@
 #' Additional arguments are passed through \code{varSelArgs}.
 #' Return value is a numeric vector containing the indices of the selected variables.
 #' @param varSelArgs named list of further arguments for \code{varSel}.
+#' @param seed seed.
 #' @return \code{getSplits} returns a list containing
 #' \itemize{
 #' \item \code{obs}: list of the \code{Q} index vectors corresponding to observations not used for variable selection
@@ -21,7 +22,10 @@
 
 
 
-getSplits <- function(X, Y, Q, target, varSel, varSelArgs){
+getSplits <- function(X, Y, Q, target, varSel, varSelArgs, seed){
+
+  if(is.null(seed)){seed <- sample(seq(10^9), 1)}
+  set.seed(round(seed))
 
   m <- ncol(X)
   n <- nrow(X)

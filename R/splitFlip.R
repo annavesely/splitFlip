@@ -1,6 +1,6 @@
 #' @title Permutation-Based Multisplit
 #' @description This function computes permutation standardized scores for high-dimensional linear regression.
-#' @usage splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL)
+#' @usage splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
 #' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
@@ -13,6 +13,7 @@
 #' Additional arguments are passed through \code{varSelArgs}.
 #' Return value is a numeric vector containing the indices of the selected variables.
 #' @param varSelArgs named list of further arguments for \code{varSel}.
+#' @param seed seed.
 #' @details The data are iteratively split into two subsets of equal size for \code{Q} times.
 #' For each split, the first subset is used to perform variable selection,
 #' while the second is used to compute the effective scores for
@@ -46,7 +47,7 @@
 
 
 
-splitFlip <- function(X, Y, Q=10, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL){
+splitFlip <- function(X, Y, Q=10, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL, seed=NULL){
 
   if(!is.matrix(X) || !is.numeric(X) || !all(is.finite(X))){stop("X must be a matrix of finite numbers")}
   n <- nrow(X)
@@ -65,8 +66,12 @@ splitFlip <- function(X, Y, Q=10, B=200, target=NULL, exact=FALSE, varSel=target
   Q <- round(Q)
   B <- round(B)
 
+  if(!is.null(seed)){if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}}
+  else{seed <- sample(seq(10^9), 1)}
+  set.seed(round(seed))
+
   # select observations and variables
-  sel <- getSplits(X, Y, Q, target, varSel, varSelArgs)
+  sel <- getSplits(X, Y, Q, target, varSel, varSelArgs, seed)
 
   # maximum number of selected variables (useful if users add their own varSel function)
   smax <- max(sapply(sel$vars, length))
