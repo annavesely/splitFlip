@@ -10,12 +10,12 @@
 #' @param concordant logical, \code{TRUE} for positive coefficients,
 #' \code{FALSE} for coefficients with alternating signs.
 #' @param seed seed.
-#' @details The covariate matrix \code{X} contains \code{n} independent observations from a
+#' @details The covariate matrix \code{X} contains the intercept and \code{n} independent observations from a
 #' MVN with mean 0 and equi-correlation \code{rho}.
-#' @details The intercept and a proportion \code{prop} of the entries in the coefficient vector
-#' are non-null, with signal such that the one-sample t test with significance level \code{alpha},
+#' @details A proportion \code{prop} of the coefficients are non-null. Their value is such that
+#' the one-sample t test with significance level \code{alpha},
 #' using half the sample size, has power equal to \code{pw}.
-#' @return \code{simData} returns a list containing the covariate matrix \code{X} (excluding the intercept),
+#' @return \code{simData} returns a list containing the covariate matrix \code{X} (including the intercept),
 #' the response vector \code{Y}, and the index vector of active variables \code{active.}
 #' @author Anna Vesely.
 #' @examples
@@ -36,7 +36,6 @@
 #'                varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active))
 #' round(G2,2)
 #' @export
-
 
 
 simData <- function(prop, m, n, rho=0, alpha=0.05, pw=0.9, concordant=TRUE, seed=NULL){
@@ -67,15 +66,15 @@ simData <- function(prop, m, n, rho=0, alpha=0.05, pw=0.9, concordant=TRUE, seed
   if(concordant){
     beta[1:m1] <- rep(signal, m1)
   }else{
-    beta[1:m1] <- c(rep(c(-signal, signal), floor(m1/2)), rep(-signal, ceiling(m1/2) - floor(m1/2)))
+    beta[1:m1] <- c(rep(c(signal, -signal), floor(m1/2)), rep(signal, ceiling(m1/2) - floor(m1/2)))
   }
 
-  # X is a n x m matrix of n independent observations from a MVN with mean 0 and equi-correlation rho
-  X <- sqrt(1-rho) * matrix(rnorm(m*n), ncol=m) + sqrt(rho) * matrix(rep(rnorm(n),m), ncol=m)
+  # X is a n x m matrix with the intercept and n independent observations from a MVN with mean 0 and equi-correlation rho
+  X <- matrix(1, ncol=m, nrow=n)
+  X[,-1] <- sqrt(1-rho) * matrix(rnorm((m-1)*n), ncol=m-1) + sqrt(rho) * matrix(rep(rnorm(n), m-1), ncol=m-1)
 
-  # generate Y from Gaussian model with intercept
-  mu <- signal + X %*% beta
-  Y <- rnorm(n=n, mean=mu)
+  # generate Y from Gaussian model
+  Y <- rnorm(n=n, mean=X %*% beta)
 
   S <- seq(m1)
 
@@ -83,10 +82,4 @@ simData <- function(prop, m, n, rho=0, alpha=0.05, pw=0.9, concordant=TRUE, seed
   return(out)
 }
 
-
-
-
-
-#'G <- splitFlip(res$X, res$Y, target=target, Q=10, B=6,
-#'               varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active))
 

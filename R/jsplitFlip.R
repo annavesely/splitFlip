@@ -2,7 +2,7 @@
 #' @description Internal function. It computes the standardized scores for a variable and different flips.
 #' @usage jsplitFlip(j, X, Y, sel, fl, exact)
 #' @param j index of the variable to be considered.
-#' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
+#' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param sel list of observations and variables for different splits, as returned by \code{getSplits}.
 #' @param fl numeric matrix, where each column is a sign flip (the first is the identity).

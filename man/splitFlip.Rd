@@ -7,7 +7,7 @@
 splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
 }
 \arguments{
-\item{X}{numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.}
+\item{X}{numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.}
 
 \item{Y}{numeric response vector.}
 
@@ -25,6 +25,8 @@ Additional arguments are passed through \code{varSelArgs}.
 Return value is a numeric vector containing the indices of the selected variables.}
 
 \item{varSelArgs}{named list of further arguments for \code{varSel}.}
+
+\item{seed}{seed.}
 }
 \value{
 \code{splitFlip} returns a numeric matrix of standardized scores, where columns correspond to variables,
@@ -52,13 +54,13 @@ target <- 2*length(res$active)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 # using the exact method with 10 data splits and Lasso selection
-G1 <- splitFlip(res$X, res$Y, target=target, B=6, exact=TRUE, seed=42)
+G1 <- splitFlip(res$X, res$Y, target=target, B=6, exact=TRUE)
 round(G1,2)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 # using the approximate method with 5 data splits and oracle selection
 G2 <- splitFlip(res$X, res$Y, target=target, Q=5, B=6,
-               varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active), seed=42)
+               varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active))
 round(G2,2)
 }
 \author{

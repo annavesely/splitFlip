@@ -7,7 +7,7 @@
 targetLasso(X, Y, target = NULL)
 }
 \arguments{
-\item{X}{numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.}
+\item{X}{numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.}
 
 \item{Y}{numeric response vector.}
 
@@ -22,7 +22,7 @@ This function uses the Lasso to select a given number of variables in the framew
 \details{
 The \code{lambda} parameter is chosen as the smallest parameter that selects at most \code{target} variables.
 
-Notice that the number of selected variables will never exceed the number of observations.
+Notice that the number of selected variables cannot exceed the number of observations.
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations

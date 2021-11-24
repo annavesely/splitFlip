@@ -7,7 +7,7 @@
 targetOracle(X, Y, target = NULL, m, active, seed = NULL)
 }
 \arguments{
-\item{X}{numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.}
+\item{X}{numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.}
 
 \item{Y}{numeric response vector.}
 

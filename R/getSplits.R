@@ -2,7 +2,7 @@
 #' @description Internal function. It splits the data into two subsets of equal size,
 #' then uses the first subset to select variables.
 #' @usage getSplits(X, Y, Q, target, varSel, varSelArgs, seed)
-#' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
+#' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
 #' @param target maximum number of variables to be selected.
@@ -19,7 +19,6 @@
 #' }
 #' @author Anna Vesely.
 #' @noRd
-
 
 
 getSplits <- function(X, Y, Q, target, varSel, varSelArgs, seed){

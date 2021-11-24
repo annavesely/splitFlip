@@ -1,11 +1,12 @@
 #' @title Permutation-Based Multisplit
 #' @description This function computes permutation standardized scores for high-dimensional linear regression.
 #' @usage splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
-#' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
+#' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
 #' @param B number of sign flips.
-#' @param target maximum number of variables to be selected. If null, it is set to half the sample size.
+#' @param target maximum number of variables to be selected, between 1 and half the sample size.
+#' If null, it is set to half the sample size.
 #' @param exact logical, \code{TRUE} for the exact method, \code{FALSE} for the approximate method.
 #' @param target maximum number of variables to be selected.
 #' @param varSel a function to perform variable selection. It must have at least three arguments:
@@ -42,9 +43,6 @@
 #'                varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active))
 #' round(G2,2)
 #' @export
-
-
-
 
 
 splitFlip <- function(X, Y, Q=10, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL, seed=NULL){
