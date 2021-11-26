@@ -26,13 +26,10 @@ jsplitFlip <- function(j, X, Y, sel, fl, exact){
 
     # for each split, compute and sum the terms R=I-H
     for(q in seq(Q)){
-      vars <- sel$vars[[q]]
-      obs <- sel$obs[[q]]
-      if(!(j %in% vars)){next}
-
-      i <- i+1
-      Z <- as.matrix(X[obs, setdiff(vars,j)])
-      R[obs, obs] <- R[obs, obs] + residualMatrix(Z)
+      if(j %in% sel$vars[[q]]){
+        i <- i+1
+        R <- R + residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j))
+      }
     }
 
     if(i == 0){return(out)} # if j was never selected, all scores are zero
@@ -50,15 +47,11 @@ jsplitFlip <- function(j, X, Y, sel, fl, exact){
 
   # for each split, compute and save the terms R=I-H
   for(q in seq(Q)){
-    vars <- sel$vars[[q]]
-    obs <- sel$obs[[q]]
-    if(!(j %in% vars)){next}
 
-    i <- i+1
-    R <- matrix(0, ncol=n, nrow=n)
-    Z <- as.matrix(X[obs, setdiff(vars,j)])
-    R[obs, obs] <- residualMatrix(Z)
-    resMats[[i]] <- R
+    if(j %in% sel$vars[[q]]){
+      i <- i+1
+      resMats[[i]] <- residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j))
+    }
   }
 
   if(i == 0){return(out)} # if j was never selected, all scores are zero

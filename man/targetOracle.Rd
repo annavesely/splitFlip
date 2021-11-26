@@ -7,15 +7,15 @@
 targetOracle(X, Y, target = NULL, m, active, seed = NULL)
 }
 \arguments{
-\item{X}{numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.}
+\item{X}{numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.}
 
 \item{Y}{numeric response vector.}
-
-\item{target}{maximum number of variables to be selected. If null, it is set to \code{nrow(X)}.}
 
 \item{m}{total number of variables.}
 
 \item{active}{numeric vector containing the indices of the variables to be always selected.}
+
+\item{targetmaximum}{number of variables, i.e. columns of \code{X}, to be selected. If null, it is set to \code{nrow(X)}.}
 }
 \value{
 \code{targetOracle} returns a numeric vector containing the indices of the selected variables.

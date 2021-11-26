@@ -1,9 +1,9 @@
 #' @title Variable Selection with Oracle
 #' @description This function selects a given number of variables, always including those in a pre-specified set.
 #' @usage targetOracle(X, Y, target = NULL, m, active, seed = NULL)
-#' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
+#' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
-#' @param target maximum number of variables to be selected. If null, it is set to \code{nrow(X)}.
+#' @param targetmaximum number of variables, i.e. columns of \code{X}, to be selected. If null, it is set to \code{nrow(X)}.
 #' @param m total number of variables.
 #' @param active numeric vector containing the indices of the variables to be always selected.
 #' @details An error message is returned if \code{target} is smaller than the length of \code{active}.

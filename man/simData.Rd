@@ -25,17 +25,18 @@ simData(prop, m, n, rho = 0, alpha = 0.05, pw = 0.9, concordant = TRUE, seed = N
 \item{seed}{seed.}
 }
 \value{
-\code{simData} returns a list containing the covariate matrix \code{X} (including the intercept),
+\code{simData} returns a list containing the covariate matrix \code{X} (excluding the intercept),
 the response vector \code{Y}, and the index vector of active variables \code{active.}
 }
 \description{
 This function simulates a design matrix and a response vector.
 }
 \details{
-The covariate matrix \code{X} contains the intercept and \code{n} independent observations from a
+The covariate matrix \code{X} contains \code{n} independent observations from a
 MVN with mean 0 and equi-correlation \code{rho}.
 
-A proportion \code{prop} of the coefficients are non-null. Their value is such that
+A proportion \code{prop} of the coefficients are non-null.
+The value of the intercept and non-null coefficients is such that
 the one-sample t test with significance level \code{alpha},
 using half the sample size, has power equal to \code{pw}.
 }

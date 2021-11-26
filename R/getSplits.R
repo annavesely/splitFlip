@@ -2,10 +2,10 @@
 #' @description Internal function. It splits the data into two subsets of equal size,
 #' then uses the first subset to select variables.
 #' @usage getSplits(X, Y, Q, target, varSel, varSelArgs, seed)
-#' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
+#' @param X numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
-#' @param target maximum number of variables to be selected.
+#' @param target maximum number of variables, i.e. columns of \code{X}, to be selected.
 #' @param varSel a function to perform variable selection. It must have at least three arguments:
 #' \code{X} (design matrix), \code{Y} (response vector) and \code{target} (maximum number of selected variables).
 #' Additional arguments are passed through \code{varSelArgs}.
