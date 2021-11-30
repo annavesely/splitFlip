@@ -43,16 +43,16 @@ targetLasso(X, Y, target)
 targetOracle(X, Y, target, toSel = active)
 ```
 
-Finally, the function ```splitFlip``` employs ```Q``` splits to construct a matrix of standardized scores for all variables (columns) and random sign flips (rows), where the first split is the identity. Other than the selection settings, one may choose the type of method: exact or approximate. The first is usually more powerful but slower, especially when the sample size is high.
+Finally, the function ```splitFlip``` employs ```Q``` splits to construct a matrix of standardized scores for all variables (columns) and random sign flips (rows), where the first split is the identity. Other than the selection settings, one may choose the type of method: approximate or exact. The latter is generally more powerful but slower, especially when the sample size is high. In this setting, for instance, the computation time is around 7s for the approximate, and 21s for the exact.
 
 ``` r 
-G <- splitFlip(X, Y, Q = 10, exact = TRUE, target = target, varSel = targetLasso, seed = 42)
+G <- splitFlip(X, Y, Q = 10, exact = FALSE, target = target, varSel = targetLasso, seed = 42)
 ```
 
 This matrix can be used to obtain p-values and identify variables that are rejected for a given significance level, for instance using the single-step maxT as following.
 
 ``` r 
-maxT(G, alpha = 0.1)
+maxT(G, alpha = 0.05)
 ```
 
 
