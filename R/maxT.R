@@ -51,7 +51,7 @@ maxT <- function(G, alpha=0.05){
     if(i > 1){p[i] <- max(p[i], p[i-1])}
   }
   p <- p[order(o, decreasing=FALSE)]
-  rej <- which(p < alpha)
+  rej <- which(p <= alpha)
   out <- list("pvalues"=p, "rejected"=rej)
   return(out)
 }
