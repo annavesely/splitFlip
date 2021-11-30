@@ -24,7 +24,7 @@
 #' @export
 
 
-targetOracle <- function(X, Y, target, active){
+targetOracle <- function(X, Y, target, toSel){
 
   if(!is.matrix(X) || !is.numeric(X) || !all(is.finite(X))){stop("X must be a matrix of finite numbers")}
   if(!is.vector(Y) || !is.numeric(Y) || !all(is.finite(Y))){stop("Y must be a vector of finite numbers")}
@@ -32,24 +32,24 @@ targetOracle <- function(X, Y, target, active){
 
   m <- ncol(X)
 
-  if(!is.vector(active) || !is.numeric(active)){stop("active must be a vector of finite integers")}
-  if(!all(floor(active)==active)){stop("active must be a vector of finite integers")}
-  if(!all(active >= 0) || !all(active <= m)){stop("active must contain indices between 1 and m")}
-  active <- unique(active)
+  if(!is.vector(toSel) || !is.numeric(toSel)){stop("toSel must be a vector of finite integers")}
+  if(!all(floor(toSel)==toSel)){stop("toSel must be a vector of finite integers")}
+  if(!all(toSel >= 0) || !all(toSel <= m)){stop("toSel must contain indices between 1 and m")}
+  toSel <- unique(toSel)
 
   if(is.null(target)){target <- nrow(X)}
   if(!is.numeric(target) || !is.finite(target) || floor(target) <= 0){stop("target must be a positive integer")}
   target <- floor(target)
 
-  inactive <- setdiff(seq(m), active)
-  d <- target - length(active)
+  others <- setdiff(seq(m), toSel)
+  d <- target - length(toSel)
   if(d < 0){stop("target should be at least equal to the number of active variables")}
-  d <- min(d, length(inactive))
+  d <- min(d, length(others))
 
   if(d == 0){
-    sel <- active
+    sel <- toSel
   }else{
-    sel <- sort(c(active, sample(inactive, d)))
+    sel <- sort(c(toSel, sample(others, d)))
   }
   return(sel)
 }

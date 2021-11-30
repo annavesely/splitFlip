@@ -11,9 +11,9 @@ targetOracle(X, Y, target = NULL, toSel)
 
 \item{Y}{numeric response vector.}
 
-\item{targetmaximum}{number of variables, i.e. columns of \code{X}, to be selected. If null, it is set to \code{nrow(X)}.}
-
 \item{toSel}{numeric vector containing the indices of the variables to be always selected.}
+
+\item{targetmaximum}{number of variables, i.e. columns of \code{X}, to be selected. If null, it is set to \code{nrow(X)}.}
 }
 \value{
 \code{targetOracle} returns a numeric vector containing the indices of the selected variables.
