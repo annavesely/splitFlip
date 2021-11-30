@@ -17,10 +17,45 @@ devtools::install_github("annavesely/splitFlip")
 The analysis employs a design matrix (excluding the intercept) and a response vector. Such data may be simulated with the function ```simData```. Here, we are assuming 20 variables and 10 observations, where 10% of the variables are active.
 
 ``` r 
-res <- simData(prop=0.1, m=20, n=10, seed=42)
+res <- simData(prop = 0.1, m = 20, n = 10, rho = 0.5, type = "toeplitz", seed = 42)
+X <- res$X # design matrix
+Y <- res$Y # response vector
+active <- res$active # indices of active variables
 ```
 
-TO FINISH (also check documentation of simData)
+First, we need to set up how many variables should be selected in each split. A reasonable approach is to estimate the number of active variables that we expect to have, and multiply it by two (notice that in this example we know this number).
+
+``` r 
+target <- 2 * length(active)
+```
+
+Subsequently, we need to choose the function that will be used for selection. This may be any function whose arguments are (at least) ```X```, ```Y``` and ```target```, and which returns the indices of selected variables. The package contains two functions.
+
+**1.** The function ```targetLasso``` employs the Lasso, calibrating its parameter to select at most ```target``` variables.
+
+``` r
+targetLasso(X, Y, target)
+```
+
+**2.** The function ```targetOracle``` selects at most ```target``` variables, always including those in a pre-specified set ```toSel```.
+
+``` r
+targetOracle(X, Y, target, toSel = active)
+```
+
+Finally, the function ```splitFlip``` employs ```Q``` splits to construct a matrix of standardized scores for all variables (columns) and random sign flips (rows), where the first split is the identity. Other than the selection settings, one may choose the type of method: exact or approximate. The first is usually more powerful but slower, especially when the sample size is high.
+
+``` r 
+G <- splitFlip(X, Y, Q = 10, exact = TRUE, target = target, varSel = targetLasso, seed = 42)
+```
+
+This matrix can be used to obtain p-values and identify variables that are rejected for a given significance level, for instance using the single-step maxT as following.
+
+``` r 
+maxT(G, alpha = 0.1)
+```
+
+
 
 # Did you find some bugs?
 
