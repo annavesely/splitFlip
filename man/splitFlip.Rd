@@ -47,21 +47,17 @@ the sum of the effective scores over the \code{Q} splits, divided by its varianc
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations
-res <- simData(prop=0.1, m=20, n=10, seed=42)
+res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", seed=42)
 
 # choose target as twice the number of active variables
 target <- 2*length(res$active)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
-# using the exact method with 10 data splits and Lasso selection
-G1 <- splitFlip(res$X, res$Y, target=target, B=6, exact=TRUE)
-round(G1,2)
+# using the approximate method with oracle selection
+G <- splitFlip(res$X, res$Y, target=target, varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active), seed=42)
 
-# matrix of standardized scores for all variables (columns) and random sign flips (rows)
-# using the approximate method with 5 data splits and oracle selection
-G2 <- splitFlip(res$X, res$Y, target=target, Q=5, B=6,
-               varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active))
-round(G2,2)
+# maxT algorithm
+maxT(G, alpha=0.1)
 }
 \author{
 Anna Vesely.

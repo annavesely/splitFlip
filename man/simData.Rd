@@ -4,7 +4,7 @@
 \alias{simData}
 \title{Simulating Linear Regression Data}
 \usage{
-simData(prop, m, n, rho = 0, alpha = 0.05, pw = 0.9, concordant = TRUE, seed = NULL)
+simData(prop, m, n, rho = 0, type = "equicorr", incrBeta = FALSE, SNR = 4, seed = NULL)
 }
 \arguments{
 \item{prop}{proportion of active variables.}
@@ -15,48 +15,47 @@ simData(prop, m, n, rho = 0, alpha = 0.05, pw = 0.9, concordant = TRUE, seed = N
 
 \item{rho}{level of equicorrelation between pairs of variables.}
 
-\item{alpha}{significance level.}
+\item{type}{type of covariance matrix among \code{equicorr} and \code{toeplitz}.}
 
-\item{pw}{power of the t test.}
+\item{incrBeta}{logical, \code{TRUE} for increasing active coefficients (1,2,3,...),
+\code{FALSE} for active coefficients all equal to 1.}
 
-\item{concordant}{logical, \code{TRUE} for positive coefficients,
-\code{FALSE} for coefficients with alternating signs.}
+\item{SNR}{signal-to-noise-ratio (ratio of mean of active coefficients to the error standard deviation).}
 
 \item{seed}{seed.}
 }
 \value{
-\code{simData} returns a list containing the covariate matrix \code{X} (excluding the intercept),
-the response vector \code{Y}, and the index vector of active variables \code{active.}
+\code{simData} returns a list containing the design matrix \code{X} (excluding the intercept),
+the response vector \code{Y}, and the index vector of active variables \code{active}.
 }
 \description{
 This function simulates a design matrix and a response vector.
 }
 \details{
-The covariate matrix \code{X} contains \code{n} independent observations from a
-MVN with mean 0 and equi-correlation \code{rho}.
+The design matrix \code{X} contains \code{n} independent observations from a
+MVN with mean 0 and covariance matrix \code{Sigma}. The term \code{Sigma(ij)} is given by \code{type}:
+\itemize{
+\item equicorrelation: 1 if \code{i=j}, and \code{rho} otherwise
+\item Toeplitz: \code{rho^|i-j|}
+}
 
-A proportion \code{prop} of the coefficients are non-null.
-The value of the intercept and non-null coefficients is such that
-the one-sample t test with significance level \code{alpha},
-using half the sample size, has power equal to \code{pw}.
+A proportion \code{prop} of the coefficients are non-null, with values depending on \code{incrBeta}.
+Then the response variable \code{Y} is equal to \code{X \%\% beta} plus an error term.
+The standard deviation of this error term is such that the signal-to-noise ratio is \code{SNR}.
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations
-res <- simData(prop=0.1, m=20, n=10, seed=42)
+res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", seed=42)
 
 # choose target as twice the number of active variables
 target <- 2*length(res$active)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
-# using the exact method with 10 data splits and Lasso selection
-G1 <- splitFlip(res$X, res$Y, target=target, B=6, exact=TRUE)
-round(G1,2)
+# using the approximate method with oracle selection
+G <- splitFlip(res$X, res$Y, target=target, varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active), seed=42)
 
-# matrix of standardized scores for all variables (columns) and random sign flips (rows)
-# using the approximate method with 5 data splits and oracle selection
-G2 <- splitFlip(res$X, res$Y, target=target, Q=5, B=6,
-               varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active))
-round(G2,2)
+# maxT algorithm
+maxT(G, alpha=0.1)
 }
 \author{
 Anna Vesely.

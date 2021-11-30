@@ -29,7 +29,7 @@ An error message is returned if \code{target} is smaller than the length of \cod
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations
-res <- simData(prop=0.1, m=20, n=10, seed=42)
+res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", seed=42)
 
 # choose target as twice the number of active variables
 target <- 2*length(res$active)
