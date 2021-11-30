@@ -46,13 +46,16 @@ The standard deviation of this error term is such that the signal-to-noise ratio
 \examples{
 # generate linear regression data with 20 variables and 10 observations
 res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", seed=42)
+X <- res$X # design matrix
+Y <- res$Y # response vector
+active <- res$active # indices of active variables
 
 # choose target as twice the number of active variables
-target <- 2*length(res$active)
+target <- 2*length(active)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 # using the approximate method with oracle selection
-G <- splitFlip(res$X, res$Y, target=target, varSel=targetOracle, varSelArgs=list(m=ncol(res$X), active=res$active), seed=42)
+G <- splitFlip(X, Y, target=target, varSel=targetOracle, varSelArgs=list(toSel=active), seed=42)
 
 # maxT algorithm
 maxT(G, alpha=0.1)

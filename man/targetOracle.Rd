@@ -4,38 +4,39 @@
 \alias{targetOracle}
 \title{Variable Selection with Oracle}
 \usage{
-targetOracle(X, Y, target = NULL, m, active, seed = NULL)
+targetOracle(X, Y, target = NULL, toSel)
 }
 \arguments{
 \item{X}{numeric design matrix (excluding the intercept), where columns correspond to variables, and rows to observations.}
 
 \item{Y}{numeric response vector.}
 
-\item{m}{total number of variables.}
-
-\item{active}{numeric vector containing the indices of the variables to be always selected.}
-
 \item{targetmaximum}{number of variables, i.e. columns of \code{X}, to be selected. If null, it is set to \code{nrow(X)}.}
+
+\item{toSel}{numeric vector containing the indices of the variables to be always selected.}
 }
 \value{
 \code{targetOracle} returns a numeric vector containing the indices of the selected variables.
-Variables in \code{active} are always included.
+Variables in \code{toSel} are always included.
 }
 \description{
 This function selects a given number of variables, always including those in a pre-specified set.
 }
 \details{
-An error message is returned if \code{target} is smaller than the length of \code{active}.
+An error message is returned if \code{target} is smaller than the length of \code{toSel}.
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations
 res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", seed=42)
+X <- res$X # design matrix
+Y <- res$Y # response vector
+active <- res$active # indices of active variables
 
 # choose target as twice the number of active variables
-target <- 2*length(res$active)
+target <- 2*length(active)
 
 # selection of at most target variables, including the active ones
-targetOracle(res$X, res$Y, target, ncol(res$X), res$active)
+targetOracle(X, Y, target, active)
 }
 \author{
 Anna Vesely.

@@ -43,13 +43,16 @@ is equal to \code{X \%\% beta} plus a standard normal error.
 \examples{
 # generate linear regression data with 30 variables and 20 observations
 res <- simData2(prop=0.05, m=30, n=20, seed=42)
+X <- res$X # design matrix
+Y <- res$Y # response vector
+active <- res$active # indices of active variables
 
 # choose target as twice the number of active variables
-target <- 2*length(res$active)
+target <- 2*length(active)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 # using the exact method with Lasso selection
-G <- splitFlip(res$X, res$Y, target=target, exact=TRUE, seed=42)
+G <- splitFlip(X, Y, target=target, exact=TRUE, seed=42)
 
 # maxT algorithm
 maxT(G)
