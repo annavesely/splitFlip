@@ -14,10 +14,10 @@ devtools::install_github("annavesely/splitFlip")
 
 ## Example
 
-The analysis employs a design matrix (excluding the intercept) and a response vector. Such data may be simulated with the function ```simData```. Here, we are assuming 20 variables and 10 observations, where 10% of the variables are active.
+The analysis employs a design matrix (excluding the intercept) and a response vector. Such data may be simulated with the function ```simData```. Here, we are assuming 80 observations of 100 variables, where 5 variables are active.
 
 ``` r 
-res <- simData(prop = 0.1, m = 20, n = 10, rho = 0.5, type = "toeplitz", seed = 42)
+res <- simData(prop = 0.05, m = 100, n = 100, rho = 0.5, type = "toeplitz", SNR = 1, seed = 42)
 X <- res$X # design matrix
 Y <- res$Y # response vector
 active <- res$active # indices of active variables
@@ -43,7 +43,7 @@ targetLasso(X, Y, target)
 targetOracle(X, Y, target, toSel = active)
 ```
 
-Finally, the function ```splitFlip``` employs ```Q``` splits to construct a matrix of standardized scores for all variables (columns) and random sign flips (rows), where the first split is the identity. Other than the selection settings, one may choose the type of method: approximate or exact. The latter is generally more powerful but slower, especially when the sample size is high. In this setting, for instance, the computation time is around 7s for the approximate, and 21s for the exact.
+Finally, the function ```splitFlip``` employs ```Q``` splits to construct a matrix of standardized scores for all variables (columns) and random sign flips (rows), where the first split is the identity. Other than the selection settings, one may choose the type of method: approximate or exact. The latter is generally more powerful but slower, especially when the sample size is high. In this setting, for instance, the computation time is around 4s for the approximate, and 12s for the exact.
 
 ``` r 
 G <- splitFlip(X, Y, Q = 10, exact = FALSE, target = target, varSel = targetLasso, seed = 42)
