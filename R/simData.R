@@ -8,7 +8,7 @@
 #' @param type type of covariance matrix among \code{equicorr} and \code{toeplitz}.
 #' @param incrBeta logical, \code{TRUE} for increasing active coefficients (1,2,3,...),
 #' \code{FALSE} for active coefficients all equal to 1.
-#' @param SNR signal-to-noise-ratio (ratio of mean of active coefficients to the error standard deviation).
+#' @param SNR signal-to-noise-ratio (ratio of the variance of \code{beta X} to the error variance).
 #' @param seed seed.
 #' @details The design matrix \code{X} contains \code{n} independent observations from a
 #' MVN with mean 0 and covariance matrix \code{Sigma}. The term \code{Sigma(ij)} is given by \code{type}:
@@ -24,7 +24,7 @@
 #' @author Anna Vesely.
 #' @examples
 #' # generate linear regression data with 20 variables and 10 observations
-#' res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", SNR=4, seed=42)
+#' res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", SNR=5, seed=42)
 #' X <- res$X # design matrix
 #' Y <- res$Y # response vector
 #' active <- res$active # indices of active variables
@@ -76,8 +76,10 @@ simData <- function(prop, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, s
   beta <- rep(0,m)
   beta[active] <- ifelse(incrBeta, active, rep(1,m1))
 
-  serr <- mean(beta[active])/SNR
-  Y <- rnorm(n=n, mean=X %*% beta, sd=serr)
+  mu <- X %*% beta
+  serr <- sqrt(var(mu)/SNR) # sd of the error term
+
+  Y <- rnorm(n=n, mean=mu, sd=serr)
 
   out <- list("X"=X, "Y"=Y, "active"=active)
   return(out)

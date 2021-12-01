@@ -20,7 +20,7 @@ This function applies the single-step maxT algorithm.
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations
-res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", SNR=4, seed=42)
+res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", SNR=5, seed=42)
 X <- res$X # design matrix
 Y <- res$Y # response vector
 active <- res$active # indices of active variables
