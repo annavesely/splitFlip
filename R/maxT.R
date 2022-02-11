@@ -32,16 +32,18 @@ maxT <- function(G, alpha=0.05){
 
   m <- ncol(G)
   B <- nrow(G)
-  o <- order(abs(G[1,]), decreasing=TRUE)
+
+  G <- abs(G)
+  o <- order(G[1,], decreasing=TRUE)
   u <- matrix(0, ncol=m, nrow=B)
 
   for(b in seq(B)){
     j <- m
-    u[b,j] <- abs(G[b,o[j]])
+    u[b,j] <- G[b,o[j]]
 
     while(j > 1){
       j <- j-1
-      u[b,j] <- max(u[b,j+1], abs(G[b,o[j]]))
+      u[b,j] <- max(u[b,j+1], G[b,o[j]])
     }
   }
 

@@ -1,4 +1,4 @@
-#' @title Permutation-Based Multisplit for a Single Variable
+#' @title Permutation-Based Multisplit for a Single Variable (old)
 #' @description Internal function. It computes the standardized scores for a variable and different flips.
 #' @usage jsplitFlip(j, X, Y, sel, fl, exact)
 #' @param j index of the variable to be considered.
@@ -12,7 +12,7 @@
 #' @noRd
 
 
-jsplitFlip <- function(j, X, Y, sel, fl, exact){
+jsplitFlip_old <- function(j, X, Y, sel, fl, exact){
 
   n <- nrow(fl)
   B <- ncol(fl)
@@ -39,7 +39,7 @@ jsplitFlip <- function(j, X, Y, sel, fl, exact){
       A <- R %*% diag(fl[,b]) %*% R
       out[b] <- stdScore(X[,j], Y, A)
     }
-    return(out * sel$sign[j])
+    return(out)
   }
 
   # EXACT METHOD
@@ -62,5 +62,5 @@ jsplitFlip <- function(j, X, Y, sel, fl, exact){
     for(i in seq_along(resMats)){A <- A + (resMats[[i]] %*% diag(fl[,b]) %*% resMats[[i]])}
     out[b] <- stdScore(X[,j], Y, A)
   }
-  return(out * sel$sign[j])
+  return(out)
 }
