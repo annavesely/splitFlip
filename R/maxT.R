@@ -33,7 +33,7 @@ maxT <- function(G, alpha=0.05){
   m <- ncol(G)
   B <- nrow(G)
 
-  G <- abs(G)
+  #G <- abs(G)
   o <- order(G[1,], decreasing=TRUE)
   u <- matrix(0, ncol=m, nrow=B)
 
