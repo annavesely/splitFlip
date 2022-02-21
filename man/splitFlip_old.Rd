@@ -4,7 +4,7 @@
 \alias{splitFlip_old}
 \title{Permutation-Based Multisplit (old)}
 \usage{
-splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
+splitFlip_old(X, Y, Q = 50, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
 }
 \arguments{
 \item{X}{numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.}
@@ -57,14 +57,14 @@ target <- 2*length(active)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 # using the approximate method with Lasso selection
-G1 <- splitFlip(X, Y, target=target, seed=42)
+G1 <- splitFlip_old(X, Y, target=target, seed=42)
 
 # maxT algorithm
 maxT(G1, alpha=0.1)
 
 # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 # using the exact method with oracle selection
-G2 <- splitFlip(X, Y, target=target, varSel=targetOracle, varSelArgs=list(toSel=active), seed=42)
+G2 <- splitFlip_old(X, Y, target=target, varSel=targetOracle, varSelArgs=list(toSel=active), seed=42)
 
 # maxT algorithm
 maxT(G2, alpha=0.1)

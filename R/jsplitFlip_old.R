@@ -1,6 +1,6 @@
 #' @title Permutation-Based Multisplit for a Single Variable (old)
 #' @description Internal function. It computes the standardized scores for a variable and different flips.
-#' @usage jsplitFlip(j, X, Y, sel, fl, exact)
+#' @usage jsplitFlip_old(j, X, Y, sel, fl, exact)
 #' @param j index of the variable to be considered.
 #' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.

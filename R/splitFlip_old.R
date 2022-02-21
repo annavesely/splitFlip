@@ -1,6 +1,6 @@
 #' @title Permutation-Based Multisplit (old)
 #' @description This function computes permutation standardized scores for high-dimensional linear regression.
-#' @usage splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
+#' @usage splitFlip_old(X, Y, Q = 50, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
 #' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
@@ -37,21 +37,21 @@
 #'
 #' # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 #' # using the approximate method with Lasso selection
-#' G1 <- splitFlip(X, Y, target=target, seed=42)
+#' G1 <- splitFlip_old(X, Y, target=target, seed=42)
 #'
 #' # maxT algorithm
 #' maxT(G1, alpha=0.1)
 #'
 #' # matrix of standardized scores for all variables (columns) and random sign flips (rows)
 #' # using the exact method with oracle selection
-#' G2 <- splitFlip(X, Y, target=target, varSel=targetOracle, varSelArgs=list(toSel=active), seed=42)
+#' G2 <- splitFlip_old(X, Y, target=target, varSel=targetOracle, varSelArgs=list(toSel=active), seed=42)
 #'
 #' # maxT algorithm
 #' maxT(G2, alpha=0.1)
 #' @export
 
 
-splitFlip_old <- function(X, Y, Q=10, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL, seed=NULL){
+splitFlip_old <- function(X, Y, Q=50, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL, seed=NULL){
 
   if(!is.matrix(X) || !is.numeric(X) || !all(is.finite(X))){stop("X must be a matrix of finite numbers")}
   n <- nrow(X)
@@ -87,5 +87,5 @@ splitFlip_old <- function(X, Y, Q=10, B=200, target=NULL, exact=FALSE, varSel=ta
   # create matrix of standardized scores
   G <- matrix(0, ncol=m, nrow=B)
   for(j in seq(m)){G[,j] <- jsplitFlip_old(j, X, Y, sel, fl, exact)}
-  return(G)
+  return(abs(G))
 }

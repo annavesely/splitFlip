@@ -1,6 +1,6 @@
 #' @title Permutation-Based Multisplit
 #' @description This function computes permutation standardized scores for high-dimensional linear regression.
-#' @usage splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
+#' @usage splitFlip(X, Y, Q = 50, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
 #' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param Q numer of data splits.
@@ -51,7 +51,7 @@
 #' @export
 
 
-splitFlip <- function(X, Y, Q=10, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL, seed=NULL){
+splitFlip <- function(X, Y, Q=50, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL, seed=NULL){
 
   if(!is.matrix(X) || !is.numeric(X) || !all(is.finite(X))){stop("X must be a matrix of finite numbers")}
   n <- nrow(X)

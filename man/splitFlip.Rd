@@ -4,7 +4,7 @@
 \alias{splitFlip}
 \title{Permutation-Based Multisplit}
 \usage{
-splitFlip(X, Y, Q = 10, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
+splitFlip(X, Y, Q = 50, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
 }
 \arguments{
 \item{X}{numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.}
