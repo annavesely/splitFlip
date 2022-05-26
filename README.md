@@ -57,6 +57,15 @@ maxT(G, alpha = 0.05)
 
 
 
+# References
+Hemerik, J. and Goeman, J. J. (2020). Robust testing in generalized linear models by sign flipping score contributions. JRSS B, 82(3):841-864.
+
+Meinshausen, N., Meier, L. and Bühlmann, P. (2009). P-values for high-dimensional regression. JASA, 104(488):1671-1681.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2021). Resampling-based Multisplit inference for high-dimensional regression. Pre-print arXiv:2205.12563.
+
+
+
 # Did you find some bugs?
 
 Please write to anna.vesely@unipd.it.
