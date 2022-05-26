@@ -1,18 +1,18 @@
-#' @title Permutation-Based Multisplit for a Single Variable (old)
+#' @title Permutation-Based Multisplit for a Single Variable (new)
 #' @description Internal function. It computes the standardized scores for a variable and different flips.
-#' @usage jsplitFlip_old(j, X, Y, sel, fl, exact)
+#' @usage jsplitFlip_new(j, X, Y, sel, fl, exact)
 #' @param j index of the variable to be considered.
 #' @param X numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.
 #' @param Y numeric response vector.
 #' @param sel list of observations and variables for different splits, as returned by \code{getSplits}.
 #' @param fl numeric matrix, where each column is a sign flip (the first is the identity).
 #' @param exact logical, \code{TRUE} for the exact method, \code{FALSE} for the approximate method.
-#' @return \code{jsplitFlip} returns a numeric vector containing the standardized scores for the different flips.
+#' @return \code{jsplitFlip_new} returns a numeric vector containing the standardized scores for the different flips.
 #' @author Anna Vesely.
 #' @noRd
 
 
-jsplitFlip_old <- function(j, X, Y, sel, fl, exact){
+jsplitFlip_new <- function(j, X, Y, sel, fl, exact){
 
   n <- nrow(fl)
   B <- ncol(fl)
@@ -39,7 +39,7 @@ jsplitFlip_old <- function(j, X, Y, sel, fl, exact){
       A <- R %*% diag(fl[,b]) %*% R
       out[b] <- stdScore(X[,j], Y, A)
     }
-    return(out)
+    return(out * sel$sign[j])
   }
 
   # EXACT METHOD
@@ -62,5 +62,5 @@ jsplitFlip_old <- function(j, X, Y, sel, fl, exact){
     for(i in seq_along(resMats)){A <- A + (resMats[[i]] %*% diag(fl[,b]) %*% resMats[[i]])}
     out[b] <- stdScore(X[,j], Y, A)
   }
-  return(out)
+  return(out * sel$sign[j])
 }

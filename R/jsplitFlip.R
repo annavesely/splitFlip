@@ -39,7 +39,7 @@ jsplitFlip <- function(j, X, Y, sel, fl, exact){
       A <- R %*% diag(fl[,b]) %*% R
       out[b] <- stdScore(X[,j], Y, A)
     }
-    return(out * sel$sign[j])
+    return(out)
   }
 
   # EXACT METHOD
@@ -62,5 +62,5 @@ jsplitFlip <- function(j, X, Y, sel, fl, exact){
     for(i in seq_along(resMats)){A <- A + (resMats[[i]] %*% diag(fl[,b]) %*% resMats[[i]])}
     out[b] <- stdScore(X[,j], Y, A)
   }
-  return(out * sel$sign[j])
+  return(out)
 }

@@ -87,5 +87,5 @@ splitFlip <- function(X, Y, Q=50, B=200, target=NULL, exact=FALSE, varSel=target
   # create matrix of standardized scores
   G <- matrix(0, ncol=m, nrow=B)
   for(j in seq(m)){G[,j] <- jsplitFlip(j, X, Y, sel, fl, exact)}
-  return(G)
+  return(abs(G))
 }
