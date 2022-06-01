@@ -33,7 +33,8 @@ getSplits <- function(X, Y, Q, target, varSel, varSelArgs, seed){
 
   obs <- vector(mode="list", length=Q)
   vars <- vector(mode="list", length=Q)
-  signs <- rep(0,m) # mode of the estimated coefficients
+  signs <- matrix(0, ncol=m, nrow=Q)
+  # signs <- rep(0,m) # mode of the estimated coefficients
 
   for(q in seq(Q)){
     # randomly split the data in 2 subsets
@@ -43,10 +44,11 @@ getSplits <- function(X, Y, Q, target, varSel, varSelArgs, seed){
 
     obs[[q]] <- setdiff(seq(n), D1)
     vars[[q]] <- V
-    signs[V] <- signs[V] + sign(coeff)
+    signs[q,V] <- 2 * (sign(coeff) >= 0) - 1
+    # signs[V] <- signs[V] + sign(coeff)
   }
 
-  signs <- 2*(signs >= 0) - 1 # mode of coefficient's signs
+  # signs <- 2*(signs >= 0) - 1 # mode of coefficient's signs
 
   out <- list("obs"=obs, "vars"=vars, "signs"=signs)
   return(out)

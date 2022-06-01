@@ -20,47 +20,50 @@ jsplitFlip_new <- function(j, X, Y, sel, fl, exact){
   out <- rep(0,B) # scores for each flip
   i <- 0 # times that j was selected
 
-  # APPROXIMATE METHOD
+  qsel <- which(sel$signs[,j] != 0) # indices of splits that select j
+  jsigns <- sel$signs[qsel,j] # signs for the splits that select j
+  K <- length(qsel)
+
+  if(K == 0){return(out)} # if j was never selected, all scores are zero
+
+
+  # APPROXIMATE METHOD (TO FIX)
   if(!exact){
     R <- matrix(0, ncol=n, nrow=n)
 
     # for each split, compute and sum the terms R=I-H
-    for(q in seq(Q)){
-      if(j %in% sel$vars[[q]]){
-        i <- i+1
-        R <- R + residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j))
-      }
+    for(q in qsel){
+      R <- R + (residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j)))
     }
-
-    if(i == 0){return(out)} # if j was never selected, all scores are zero
 
     # for each permutation, compute A=RFR and the standardized score
     for(b in seq(B)){
       A <- R %*% diag(fl[,b]) %*% R
       out[b] <- stdScore(X[,j], Y, A)
     }
-    return(out * sel$sign[j])
+    return(out)
   }
+
+
 
   # EXACT METHOD
-  resMats <- list()
+  resMats <- vector(mode="list", length=K)
 
   # for each split, compute and save the terms R=I-H
-  for(q in seq(Q)){
+  k <- 0
 
-    if(j %in% sel$vars[[q]]){
-      i <- i+1
-      resMats[[i]] <- residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j))
-    }
+  for(q in qsel){
+    k <- k+1
+    resMats[[k]] <- residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j))
   }
-
-  if(i == 0){return(out)} # if j was never selected, all scores are zero
 
   # for each permutation, compute A=sum(RFR) and the standardized score
   for(b in seq(B)){
     A <- matrix(0, ncol=n, nrow=n)
-    for(i in seq_along(resMats)){A <- A + (resMats[[i]] %*% diag(fl[,b]) %*% resMats[[i]])}
+    for(k in seq(K)){
+      A <- A + (jsigns[k] * resMats[[k]] %*% diag(fl[,b]) %*% resMats[[k]])
+    }
     out[b] <- stdScore(X[,j], Y, A)
   }
-  return(out * sel$sign[j])
+  return(out )
 }

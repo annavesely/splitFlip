@@ -48,7 +48,7 @@
 #'
 #' # maxT algorithm
 #' maxT(G2, alpha=0.1)
-#' @noRd
+#' @export
 
 
 splitFlip_new <- function(X, Y, Q=50, B=200, target=NULL, exact=FALSE, varSel=targetLasso, varSelArgs=NULL, seed=NULL){
