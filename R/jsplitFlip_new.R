@@ -32,8 +32,11 @@ jsplitFlip_new <- function(j, X, Y, sel, fl, exact){
     R <- matrix(0, ncol=n, nrow=n)
 
     # for each split, compute and sum the terms R=I-H
+    k <- 0
+
     for(q in qsel){
-      R <- R + (residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j)))
+      k <- k+1
+      R <- R + (jsigns[k] * residualMatrix(j, X, sel$obs[[q]], setdiff(sel$vars[[q]],j)))
     }
 
     # for each permutation, compute A=RFR and the standardized score
