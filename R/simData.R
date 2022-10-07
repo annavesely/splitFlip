@@ -72,12 +72,19 @@ simData <- function(prop, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, s
   }
 
   m1 <- ceiling(m * prop)
-  active <- seq(m1)
-  beta <- rep(0,m)
-  beta[active] <- ifelse(incrBeta, active, rep(1,m1))
+
+  active <- sample(seq(m), m1)
+  beta <- rep(0, m)
+  if(incrBeta){
+    beta[active] <- seq(m1)
+  }else{
+    beta[active] <- rep(1,m1)
+  }
+  active <- sort(active)
 
   mu <- X %*% beta
-  serr <- sqrt(var(mu)/SNR) # sd of the error term
+  mu_norm <- sqrt(t(mu) %*% mu)
+  serr <- mu_norm/SNR # sd of the error term
 
   Y <- rnorm(n=n, mean=mu, sd=serr)
 
