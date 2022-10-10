@@ -4,11 +4,11 @@
 #' @param prop proportion of active variables.
 #' @param m number of variables.
 #' @param n numer of observations.
-#' @param rho level of equicorrelation between pairs of variables.
+#' @param rho level of correlation.
 #' @param type type of covariance matrix among \code{equicorr} and \code{toeplitz}.
 #' @param incrBeta logical, \code{TRUE} for increasing active coefficients (1,2,3,...),
 #' \code{FALSE} for active coefficients all equal to 1.
-#' @param SNR signal-to-noise-ratio (ratio of the variance of \code{beta X} to the error variance).
+#' @param SNR signal-to-noise-ratio (ratio of the Euclidean norm of \code{beta X} to the error standard deviation).
 #' @param seed seed.
 #' @details The design matrix \code{X} contains \code{n} independent observations from a
 #' MVN with mean 0 and covariance matrix \code{Sigma}. The term \code{Sigma(ij)} is given by \code{type}:
@@ -17,7 +17,7 @@
 #' \item Toeplitz: \code{rho^|i-j|}
 #' }
 #' @details A proportion \code{prop} of the coefficients are non-null, with values depending on \code{incrBeta}.
-#' Then the response variable \code{Y} is equal to \code{X %% beta} plus an error term.
+#' Then the response variable \code{Y} is equal to \code{X beta} plus an error term.
 #' The standard deviation of this error term is such that the signal-to-noise ratio is \code{SNR}.
 #' @return \code{simData} returns a list containing the design matrix \code{X} (excluding the intercept),
 #' the response vector \code{Y}, and the index vector of active variables \code{active}.

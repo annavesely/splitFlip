@@ -13,14 +13,14 @@ simData(prop, m, n, rho = 0, type = "equicorr", incrBeta = FALSE, SNR = 1, seed 
 
 \item{n}{numer of observations.}
 
-\item{rho}{level of equicorrelation between pairs of variables.}
+\item{rho}{level of correlation.}
 
 \item{type}{type of covariance matrix among \code{equicorr} and \code{toeplitz}.}
 
 \item{incrBeta}{logical, \code{TRUE} for increasing active coefficients (1,2,3,...),
 \code{FALSE} for active coefficients all equal to 1.}
 
-\item{SNR}{signal-to-noise-ratio (ratio of the variance of \code{beta X} to the error variance).}
+\item{SNR}{signal-to-noise-ratio (ratio of the Euclidean norm of \code{beta X} to the error standard deviation).}
 
 \item{seed}{seed.}
 }
@@ -40,7 +40,7 @@ MVN with mean 0 and covariance matrix \code{Sigma}. The term \code{Sigma(ij)} is
 }
 
 A proportion \code{prop} of the coefficients are non-null, with values depending on \code{incrBeta}.
-Then the response variable \code{Y} is equal to \code{X \%\% beta} plus an error term.
+Then the response variable \code{Y} is equal to \code{X beta} plus an error term.
 The standard deviation of this error term is such that the signal-to-noise ratio is \code{SNR}.
 }
 \examples{
