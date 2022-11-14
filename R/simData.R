@@ -1,14 +1,14 @@
 #' @title Simulating Linear Regression Data
 #' @description This function simulates a design matrix and a response vector.
-#' @usage simData(prop, m, n, rho = 0, type = "equicorr", incrBeta = FALSE, SNR = 1, seed = NULL)
-#' @param prop proportion of active variables.
-#' @param m number of variables.
-#' @param n numer of observations.
-#' @param rho level of correlation.
+#' @usage simData(m1, m, n, rho = 0, type = "equicorr", incrBeta = FALSE, SNR = 1, seed = NULL)
+#' @param m1 number of active variables.
+#' @param m total number of variables.
+#' @param n number of observations.
+#' @param rho correlation parameter.
 #' @param type type of covariance matrix among \code{equicorr} and \code{toeplitz}.
 #' @param incrBeta logical, \code{TRUE} for increasing active coefficients (1,2,3,...),
 #' \code{FALSE} for active coefficients all equal to 1.
-#' @param SNR signal-to-noise-ratio (ratio of the Euclidean norm of \code{beta X} to the error standard deviation).
+#' @param SNR signal-to-noise-ratio (ratio between the variances of \code{X beta} and the error term).
 #' @param seed seed.
 #' @details The design matrix \code{X} contains \code{n} independent observations from a
 #' MVN with mean 0 and covariance matrix \code{Sigma}. The term \code{Sigma(ij)} is given by \code{type}:
@@ -16,10 +16,10 @@
 #' \item equicorrelation: 1 if \code{i=j}, and \code{rho} otherwise
 #' \item Toeplitz: \code{rho^|i-j|}
 #' }
-#' @details A proportion \code{prop} of the coefficients are non-null, with values depending on \code{incrBeta}.
+#' @details A number \code{m1} of the coefficients are non-null, with values depending on \code{incrBeta}.
 #' Then the response variable \code{Y} is equal to \code{X beta} plus an error term.
 #' The standard deviation of this error term is such that the signal-to-noise ratio is \code{SNR}.
-#' @return \code{simData} returns a list containing the design matrix \code{X} (excluding the intercept),
+#' @return \code{simData} returns a list containing the design matrix \code{X} (not including the intercept),
 #' the response vector \code{Y}, and the index vector of active variables \code{active}.
 #' @author Anna Vesely.
 #' @examples
@@ -42,7 +42,7 @@
 
 
 
-simData <- function(prop, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, seed=NULL){
+simData <- function(m1, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, seed=NULL){
 
   if(!is.numeric(prop) || !is.finite(prop)){stop("prop must be a number in [0,1]")}
   if(prop < 0 || prop > 1){stop("prop must be a number in [0,1]")}
@@ -63,7 +63,9 @@ simData <- function(prop, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, s
   else{seed <- sample(seq(10^9), 1)}
   set.seed(round(seed))
 
-  if(type == "equicorr"){
+  if(rho == 0){
+    X <- matrix(rnorm(m*n), ncol=m)
+  }else if(type == "equicorr"){
     X <- sqrt(1-rho) * matrix(rnorm(m*n), ncol=m) + sqrt(rho) * matrix(rep(rnorm(n), m), ncol=m)
   }else{
     r <- rho^(0:(m-1))
@@ -72,7 +74,6 @@ simData <- function(prop, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, s
   }
 
   m1 <- ceiling(m * prop)
-
   active <- sample(seq(m), m1)
   beta <- rep(0, m)
   if(incrBeta){
@@ -83,8 +84,8 @@ simData <- function(prop, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, s
   active <- sort(active)
 
   mu <- X %*% beta
-  mu_norm <- sqrt(t(mu) %*% mu)
-  serr <- mu_norm/SNR # sd of the error term
+  mu_var <- var(mu) * (n-1) / n
+  serr <- sqrt(mu_var/SNR) # sd of the error term
 
   Y <- rnorm(n=n, mean=mu, sd=serr)
 

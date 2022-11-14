@@ -20,7 +20,7 @@ simData(prop, m, n, rho = 0, type = "equicorr", incrBeta = FALSE, SNR = 1, seed 
 \item{incrBeta}{logical, \code{TRUE} for increasing active coefficients (1,2,3,...),
 \code{FALSE} for active coefficients all equal to 1.}
 
-\item{SNR}{signal-to-noise-ratio (ratio of the Euclidean norm of \code{beta X} to the error standard deviation).}
+\item{SNR}{signal-to-noise-ratio (ratio between the variances of \code{X beta} and the error term).}
 
 \item{seed}{seed.}
 }

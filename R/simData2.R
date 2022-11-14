@@ -35,7 +35,7 @@
 #'
 #' # maxT algorithm
 #' maxT(G)
-#' @export
+#' @noRd
 
 
 simData2 <- function(prop, m, n, rho=0, alpha=0.05, pw=0.8, concordant=TRUE, seed=NULL){

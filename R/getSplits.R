@@ -1,4 +1,4 @@
-#' @title Data Splits and Variable Selectiong
+#' @title Data Splits and Variable Selection
 #' @description Internal function. It splits the data into two subsets of equal size,
 #' then uses the first subset to select variables.
 #' @usage getSplits(X, Y, Q, target, varSel, varSelArgs, seed)
