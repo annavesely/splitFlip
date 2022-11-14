@@ -17,7 +17,7 @@ devtools::install_github("annavesely/splitFlip")
 The analysis employs a design matrix (excluding the intercept) and a response vector. Such data may be simulated with the function ```simData```. Here, we are assuming 10 observations of 20 variables, where 2 variables are active.
 
 ``` r 
-res <- simData(m1=2, m = 20, n = 10, rho = 0.5, type = "toeplitz", SNR = 5, seed = 42)
+res <- simData(m1 = 2, m = 20, n = 10, rho = 0.5, type = "toeplitz", SNR = 5, seed = 42)
 X <- res$X # design matrix
 Y <- res$Y # response vector
 active <- res$active # indices of active variables
@@ -66,7 +66,7 @@ G <- splitFlip(X, Y, target = target, varSel = selOracle, varSelArgs = list(toSe
 The resulting matrix matrix can be used to obtain p-values and identify variables that are rejected for a given significance level, for instance using the single-step maxT as following.
 
 ``` r 
-maxT(G, alpha = 0.05)
+maxT(G, alpha = 0.1)
 ```
 
 
