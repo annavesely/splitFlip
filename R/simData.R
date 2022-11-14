@@ -24,7 +24,7 @@
 #' @author Anna Vesely.
 #' @examples
 #' # generate linear regression data with 20 variables and 10 observations
-#' res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", SNR=5, seed=42)
+#' res <- simData(m1=2, m=20, n=10, rho=0.5, type="toeplitz", SNR=5, seed=42)
 #' X <- res$X # design matrix
 #' Y <- res$Y # response vector
 #' active <- res$active # indices of active variables
@@ -32,8 +32,7 @@
 #' # choose target as twice the number of active variables
 #' target <- 2*length(active)
 #'
-#' # matrix of standardized scores for all variables (columns) and random sign flips (rows)
-#' # using the approximate method with Lasso selection
+#' # standardized scores using the approximate method with Lasso selection of target variables
 #' G <- splitFlip(X, Y, target=target, seed=42)
 #'
 #' # maxT algorithm
@@ -44,8 +43,8 @@
 
 simData <- function(m1, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, seed=NULL){
 
-  if(!is.numeric(prop) || !is.finite(prop)){stop("prop must be a number in [0,1]")}
-  if(prop < 0 || prop > 1){stop("prop must be a number in [0,1]")}
+  if(!is.numeric(m1) || !is.finite(m1)){stop("m1 must be a number in [0,m]")}
+  if(m1 < 0 || m1 > m){stop("m1 must be a number in [0,m]")}
 
   # check on m and n
   if(!is.numeric(m) || !is.finite(m) || round(m) <= 0){stop("m must be a positive integer")}
@@ -73,7 +72,6 @@ simData <- function(m1, m, n, rho=0, type="equicorr", incrBeta=FALSE, SNR=1, see
     X <- mvtnorm::rmvnorm(n, sigma=Sigma)
   }
 
-  m1 <- ceiling(m * prop)
   active <- sample(seq(m), m1)
   beta <- rep(0, m)
   if(incrBeta){

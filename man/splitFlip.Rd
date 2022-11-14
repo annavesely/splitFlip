@@ -2,9 +2,9 @@
 % Please edit documentation in R/splitFlip.R
 \name{splitFlip}
 \alias{splitFlip}
-\title{Permutation-Based Multisplit}
+\title{Resampling-Based Multisplit}
 \usage{
-splitFlip(X, Y, Q = 50, B = 200, target = NULL, exact = FALSE, varSel = targetLasso, varSelArgs = NULL, seed = NULL)
+splitFlip(X, Y, Q = 50, B = 200, target = NULL, varSel = selLasso, varSelArgs = NULL, exact = FALSE, maxRepeat = 20, seed = NULL)
 }
 \arguments{
 \item{X}{numeric design matrix (including the intercept), where columns correspond to variables, and rows to observations.}
@@ -17,14 +17,16 @@ splitFlip(X, Y, Q = 50, B = 200, target = NULL, exact = FALSE, varSel = targetLa
 
 \item{target}{maximum number of variables to be selected.}
 
-\item{exact}{logical, \code{TRUE} for the exact method, \code{FALSE} for the approximate method.}
-
 \item{varSel}{a function to perform variable selection. It must have at least three arguments:
 \code{X} (design matrix), \code{Y} (response vector) and \code{target} (maximum number of selected variables).
 Additional arguments are passed through \code{varSelArgs}.
 Return value is a numeric vector containing the indices of the selected variables.}
 
 \item{varSelArgs}{named list of further arguments for \code{varSel}.}
+
+\item{exact}{logical, \code{TRUE} for the exact method, \code{FALSE} for the approximate method.}
+
+\item{maxRepeat}{maximum number of split trials.}
 
 \item{seed}{seed.}
 }
@@ -33,21 +35,23 @@ Return value is a numeric vector containing the indices of the selected variable
 and rows to \code{B} random sign flips. The first flip is the identity.
 }
 \description{
-This function computes permutation standardized scores for high-dimensional linear regression.
+This function computes resampling-based standardized scores for high-dimensional linear regression.
 }
 \details{
 The data are iteratively split into two subsets of equal size for \code{Q} times.
 For each split, the first subset is used to perform variable selection,
 while the second is used to compute the effective scores for
 each variable and \code{B} random sign flips (including the identity).
-If a variable is not selected, its score is set to zero.
-
-For each variable and each sign flip, the standardized score is defined as (an approximation of)
+If a variable is not selected, its score is set to zero. For each variable and each sign flip, the standardized score is defined as (an approximation of)
 the sum of the effective scores over the \code{Q} splits, divided by its variance.
+
+If too many variables are selected in a split (more than half the sample size),
+a warning is returned and the data is randomly split again.
+After \code{maxRepeat} trials where too many variables are selected, the function returns an error message.
 }
 \examples{
 # generate linear regression data with 20 variables and 10 observations
-res <- simData(prop=0.1, m=20, n=10, rho=0.5, type="toeplitz", SNR=5, seed=42)
+res <- simData(m1=2, m=20, n=10, rho=0.5, type="toeplitz", SNR=5, seed=42)
 X <- res$X # design matrix
 Y <- res$Y # response vector
 active <- res$active # indices of active variables
@@ -55,16 +59,14 @@ active <- res$active # indices of active variables
 # choose target as twice the number of active variables
 target <- 2*length(active)
 
-# matrix of standardized scores for all variables (columns) and random sign flips (rows)
-# using the approximate method with Lasso selection
+# standardized scores using the approximate method with Lasso selection of target variables
 G1 <- splitFlip(X, Y, target=target, seed=42)
 
 # maxT algorithm
 maxT(G1, alpha=0.1)
 
-# matrix of standardized scores for all variables (columns) and random sign flips (rows)
-# using the exact method with oracle selection
-G2 <- splitFlip(X, Y, target=target, varSel=targetOracle, varSelArgs=list(toSel=active), seed=42)
+# standardized scores using the exact method with oracle selection of target variables
+G2 <- splitFlip(X, Y, target=target, varSel=selOracle, varSelArgs=list(toSel=active), seed=42)
 
 # maxT algorithm
 maxT(G2, alpha=0.1)
