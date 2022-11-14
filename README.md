@@ -1,6 +1,6 @@
 # splitFlip
 
-splitFlip is the package developed to compute permutation test statistics for high-dimensional linear regression, using random splits of the data and random sign-flipping transformations.
+splitFlip is the package developed to perform resampling-based Multisplit inference for high-dimensional linear regression. It computes test statistics for all variables and random sign-flipping transformations.
 
 
 ## Installation
@@ -17,39 +17,53 @@ devtools::install_github("annavesely/splitFlip")
 The analysis employs a design matrix (excluding the intercept) and a response vector. Such data may be simulated with the function ```simData```. Here, we are assuming 10 observations of 20 variables, where 2 variables are active.
 
 ``` r 
-res <- simData(prop = 0.1, m = 20, n = 10, rho = 0.5, type = "toeplitz", SNR = 5, seed = 42)
+res <- simData(m1=2, m = 20, n = 10, rho = 0.5, type = "toeplitz", SNR = 5, seed = 42)
 X <- res$X # design matrix
 Y <- res$Y # response vector
 active <- res$active # indices of active variables
 ```
 
-First, we need to set up how many variables should be selected in each split. A reasonable approach is to estimate the number of active variables that we expect to have, and multiply it by two (notice that in this example we know this number). Otherwise, if no information is available to estimate this number, one can set the target as half the sample size.
+First, we need to choose the technique used to select variables for any random splits of the data. The package contains three functions.
 
-``` r 
-target <- 2 * length(active)
-```
-
-Subsequently, we need to choose the variable selection technique. This may be any function whose arguments are (at least) ```X```, ```Y``` and ```target```, and which returns the indices of selected variables. The package contains two functions.
-
-**1.** The function ```targetLasso``` employs the Lasso, calibrating its parameter to select at most ```target``` variables.
+**1.** ```selLasso``` employs the Lasso. If it is possible to estimate the expected number of active variables, we suggest calibrating the lambda parameter to select at most twice the expected number of active variables. 
 
 ``` r
-targetLasso(X, Y, target)
+target <- 2*length(active)
+selLasso(X, Y, target)
 ```
 
-**2.** The function ```targetOracle``` selects at most ```target``` variables, always including those in a pre-specified set ```toSel```.
+If no information is available to estimate this number, we suggest using cross-validation.
 
 ``` r
-targetOracle(X, Y, target, toSel = active)
+selLasso(X, Y)
 ```
 
-Finally, the function ```splitFlip``` employs ```Q``` splits to construct a matrix of permutation test statistics for all variables (columns) and ```B``` random sign-flipping transformations (rows), where the first split is the identity. Other than the variable selection technique, one may choose the type of method: approximate or exact. The latter is generally more powerful but slower, especially when the sample size is high.
+**2.** ```selCorrelation``` selects the first ```target``` variables having the highest correlation (in absolute value) with the response.
+
+``` r
+selCorrelation(X, Y, target)
+```
+
+**3.** ```selOracle``` selects at most ```target``` variables, always including those in a pre-specified set ```toSel```. This may be useful in simulations to explore the properties of the method when assumptions are met.
+
+``` r
+selOracle(X, Y, target, toSel = active)
+```
+
+Subsequently, the function ```splitFlip``` employs ```Q``` splits to construct a matrix of permutation test statistics for all variables (columns) and ```B``` random sign-flipping transformations (rows), where the first split is the identity. Other than the variable selection technique, one may choose the type of method: approximate or exact. The latter is generally more powerful but slower, especially when the sample size is high. For instance:
 
 ``` r 
-G <- splitFlip(X, Y, Q = 50, B = 200, exact = FALSE, target = target, varSel = targetLasso, seed = 42)
+# Lasso to select at most target variables
+G <- splitFlip(X, Y, target = target, varSel = selLasso, seed = 42)
+
+# Lasso with cross-validation
+G <- splitFlip(X, Y, target = NULL, varSel = selLasso, seed = 42)
+
+# oracle selection
+G <- splitFlip(X, Y, target, varSel = selLasso, varSelArgs = list(toSel = active), seed = 42)
 ```
 
-This matrix can be used to obtain p-values and identify variables that are rejected for a given significance level, for instance using the single-step maxT as following.
+The resulting matrix matrix can be used to obtain p-values and identify variables that are rejected for a given significance level, for instance using the single-step maxT as following.
 
 ``` r 
 maxT(G, alpha = 0.05)
