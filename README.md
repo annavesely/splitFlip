@@ -60,7 +60,7 @@ G <- splitFlip(X, Y, target = target, varSel = selLasso, seed = 42)
 G <- splitFlip(X, Y, target = NULL, varSel = selLasso, seed = 42)
 
 # oracle selection
-G <- splitFlip(X, Y, target, varSel = selLasso, varSelArgs = list(toSel = active), seed = 42)
+G <- splitFlip(X, Y, target = target, varSel = selOracle, varSelArgs = list(toSel = active), seed = 42)
 ```
 
 The resulting matrix matrix can be used to obtain p-values and identify variables that are rejected for a given significance level, for instance using the single-step maxT as following.
