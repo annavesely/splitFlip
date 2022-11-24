@@ -37,6 +37,7 @@
 #'
 #' # maxT algorithm
 #' maxT(G, alpha=0.1)
+#' @importFrom mvtnorm rmvnorm
 #' @export
 
 

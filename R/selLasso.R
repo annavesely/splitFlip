@@ -26,6 +26,7 @@
 #'
 #' # Lasso with 10-fold cross-validation
 #' selLasso(X, Y)
+#' @importFrom hdi lasso.cv lasso.firstq
 #' @export
 
 
